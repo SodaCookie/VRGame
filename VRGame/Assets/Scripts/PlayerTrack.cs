@@ -10,18 +10,25 @@ public class PlayerTrack : MonoBehaviour {
 	public int InterpolationSteps;
 	[Tooltip("THe way points of the track")]
 	[HideInInspector] public List<Transform> WayPoints;
+    
+#region PRIVATE VARIABLES
+	private float[] wayPointWidths;
+	private float[] wayPointSectionLengths;
+#endregion
 
 	private void Start()
 	{
 		WayPoints = GenerateWayPoints();
 	}
 
-	public float GetWidth(int index, float t) {
-		return 0;
+	public float GetWidth(int index, float t) 
+	{
+		return Mathf.Lerp(wayPointWidths[index], wayPointWidths[index + 1], t);
 	}
 
-	public float GetLength(int index) {
-		return 0;
+	public float GetLength(int index) 
+	{
+		return wayPointSectionLengths[index];
 	}
 
     /// <summary>
@@ -56,7 +63,19 @@ public class PlayerTrack : MonoBehaviour {
 		lastWayPoint.transform.SetParent(wayPoints.transform);
 		lastWayPoint.transform.position = GuidePoints[GuidePoints.Count - 1].position;
 		lastWayPoint.AddComponent<WayPoint>().width = GuidePoints[GuidePoints.Count - 1].GetComponent<WayPoint>().width;
+        
+		// Precompute convinence values
+		wayPointWidths = new float[WayPoints.Count];
+		for (int i = 0; i < WayPoints.Count; i++) {
+			wayPointWidths[i] = WayPoints[i].GetComponent<WayPoint>().width;
+		}
 
+		wayPointSectionLengths = new float[WayPoints.Count - 1];
+		for (int i = 0; i < WayPoints.Count - 1; i++)
+        {
+			wayPointSectionLengths[i] = (WayPoints[i + 1].position - WayPoints[i].position).magnitude;
+        }
+        
 		return transforms;
 	}
     
