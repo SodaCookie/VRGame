@@ -65,15 +65,15 @@ public class PlayerTrack : MonoBehaviour {
 		lastWayPoint.AddComponent<WayPoint>().width = GuidePoints[GuidePoints.Count - 1].GetComponent<WayPoint>().width;
         
 		// Precompute convinence values
-		wayPointWidths = new float[WayPoints.Count];
-		for (int i = 0; i < WayPoints.Count; i++) {
-			wayPointWidths[i] = WayPoints[i].GetComponent<WayPoint>().width;
+		wayPointWidths = new float[transforms.Count];
+		for (int i = 0; i < transforms.Count; i++) {
+			wayPointWidths[i] = transforms[i].GetComponent<WayPoint>().width;
 		}
 
-		wayPointSectionLengths = new float[WayPoints.Count - 1];
-		for (int i = 0; i < WayPoints.Count - 1; i++)
+		wayPointSectionLengths = new float[transforms.Count - 1];
+		for (int i = 0; i < transforms.Count - 1; i++)
         {
-			wayPointSectionLengths[i] = (WayPoints[i + 1].position - WayPoints[i].position).magnitude;
+			wayPointSectionLengths[i] = (transforms[i + 1].position - transforms[i].position).magnitude;
         }
         
 		return transforms;
